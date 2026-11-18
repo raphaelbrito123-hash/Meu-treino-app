@@ -1,0 +1,17 @@
+MEU TREINO — pacote PWA
+
+Conteúdo:
+- index.html: aplicativo completo
+- manifest.webmanifest: configuração de instalação
+- sw.js: cache offline básico
+- icon-192.png e icon-512.png: ícones
+
+Como publicar para instalar no iPhone:
+1. Hospede todos os arquivos em um endereço HTTPS (por exemplo, serviço de hospedagem estática).
+2. Abra o endereço no Safari do iPhone.
+3. Toque em Compartilhar > Adicionar à Tela de Início.
+4. Abra pelo ícone criado.
+
+Os dados de treinos e medidas ficam salvos no armazenamento local do navegador/dispositivo. Não há sincronização em nuvem nesta versão. Faça backup antes de trocar de aparelho ou limpar os dados do Safari.
+
+Observação: o aplicativo inclui o treino-base combinado na conversa. Ajuste exercícios/cargas com orientação profissional conforme técnica, limitações e recuperação.

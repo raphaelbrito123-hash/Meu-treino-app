@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#101827"><meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Meu Treino">
+<link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="icon-192.png">
+<title>Meu Treino</title>
+<style>
+:root{--bg:#0b1220;--panel:#121d2e;--panel2:#1a2940;--line:#26364d;--txt:#f3f6fb;--muted:#9eacc0;--green:#48d597;--blue:#82aaff}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--txt);font:15px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;padding-bottom:88px}
+header{padding:22px 18px 14px;background:linear-gradient(145deg,#14243b,#0b1220)}h1{font-size:26px;margin:0 0 4px}h2{font-size:19px;margin:0 0 12px}h3{font-size:16px;margin:0}.muted{color:var(--muted);font-size:13px}
+main{max-width:720px;margin:auto;padding:14px}.tabs{display:flex;gap:8px;overflow:auto;padding:10px 0 14px}.tab,button{border:0;border-radius:12px;padding:11px 14px;background:var(--panel2);color:var(--txt);font-weight:650}.tab.active,button.primary{background:var(--green);color:#062116}.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:15px;margin:10px 0}.row{display:flex;justify-content:space-between;align-items:center;gap:10px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.stat{background:var(--panel2);padding:13px;border-radius:13px}.stat b{font-size:24px;display:block}.exercise{border-top:1px solid var(--line);padding:14px 0}.exercise:first-of-type{border-top:0}.sets{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:9px}.sets label,.field label{font-size:11px;color:var(--muted);display:block;margin-bottom:4px}input,select{width:100%;min-width:0;background:#0b1422;border:1px solid var(--line);border-radius:9px;color:var(--txt);padding:10px;font-size:15px}input[type=checkbox]{width:auto;transform:scale(1.2)}.field{margin:9px 0}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}button.secondary{background:#26364d}button.danger{background:#4b2631}.bottom{position:fixed;bottom:0;left:0;right:0;background:#101a2a;border-top:1px solid var(--line);display:flex;justify-content:space-around;padding:9px 4px calc(9px + env(safe-area-inset-bottom));z-index:4}.bottom button{background:transparent;color:var(--muted);padding:9px 10px;font-size:12px}.bottom button.active{color:var(--green)}.hidden{display:none}.bar{height:8px;border-radius:10px;background:#26364d;overflow:hidden}.bar span{display:block;height:100%;background:var(--green)}.history-item{padding:10px 0;border-bottom:1px solid var(--line)}small{color:var(--muted)}.pill{font-size:11px;color:var(--green);background:#12382d;padding:5px 8px;border-radius:20px}
+</style>
+</head>
+<body>
+<header><div class="muted">DIÁRIO DE MUSCULAÇÃO</div><h1>Meu Treino 💪</h1><div class="muted">Registre. Compare. Evolua.</div></header>
+<main>
+<section id="home">
+ <div class="grid">
+  <div class="stat"><b id="weekCount">0/5</b><span class="muted">treinos registrados</span></div>
+  <div class="stat"><b id="weightStat">72 kg</b><span class="muted">peso mais recente</span></div>
+ </div>
+ <div class="card"><div class="row"><h2>Treino da semana</h2><span class="pill">Dom–Qui</span></div><div class="bar"><span id="weekBar" style="width:0%"></span></div><p class="muted" id="homeHint">Escolha um treino e registre suas séries.</p><button class="primary" onclick="show('workouts')">Abrir meus treinos</button></div>
+ <div class="card"><h2>Últimas medidas</h2><div id="latestMeasures" class="muted">Nenhuma medida registrada ainda.</div><p class="muted">Registre peso, cintura, abdômen, peito, braços, quadril, coxas e panturrilhas.</p><button class="secondary" onclick="show('measures')">Registrar medidas</button></div>
+</section>
+<section id="workouts" class="hidden">
+ <h2>Meus treinos</h2><div class="tabs" id="dayTabs"></div><div class="card"><div class="row"><div><h2 id="dayTitle"></h2><div class="muted" id="dayFocus"></div></div><span class="pill" id="exerciseCount"></span></div><div id="exerciseList"></div><div class="actions"><button class="primary" onclick="saveWorkout()">Salvar treino</button><button class="secondary" onclick="clearWorkoutInputs()">Limpar campos</button></div></div>
+</section>
+<section id="measures" class="hidden">
+ <h2>Medidas corporais</h2><p class="muted">Registre sempre em condições parecidas. Medidas em centímetros; peso em kg.</p>
+ <div class="card"><div class="field"><label>Data</label><input id="mDate" type="date"></div><div class="grid" id="measureFields"></div><div class="actions"><button class="primary" onclick="saveMeasures()">Salvar medidas</button></div></div>
+ <div class="card"><h2>Histórico de medidas</h2><div id="measureHistory" class="muted">Ainda sem registros.</div></div>
+</section>
+<section id="history" class="hidden">
+ <h2>Histórico de treinos</h2><div class="card"><div id="workoutHistory" class="muted">Seus treinos salvos aparecerão aqui.</div></div>
+ <div class="card"><h2>Evolução de carga</h2><p class="muted">Selecione um exercício para comparar registros.</p><select id="exerciseSelect" onchange="renderProgress()"></select><div id="progress" class="muted" style="margin-top:12px">Sem dados ainda.</div></div>
+</section>
+</main>
+<nav class="bottom"><button class="active" data-page="home" onclick="show('home')">⌂<br>Início</button><button data-page="workouts" onclick="show('workouts')">🏋️<br>Treinos</button><button data-page="measures" onclick="show('measures')">📏<br>Medidas</button><button data-page="history" onclick="show('history')">↗<br>Histórico</button></nav>
+<script>
+const plans=[
+{day:"Domingo",focus:"Peito, ombros e tríceps",items:[["Supino reto",3,"8–12"],["Supino inclinado com halteres",3,"8–12"],["Crucifixo máquina",2,"12–15"],["Desenvolvimento com halteres",3,"8–12"],["Elevação lateral",3,"12–15"],["Tríceps corda",3,"10–12"],["Tríceps francês",2,"10–12"]]},
+{day:"Segunda",focus:"Quadríceps e panturrilhas",items:[["Agachamento livre",3,"8–10"],["Leg press 45°",3,"10–12"],["Cadeira extensora",3,"12–15"],["Afundo com halteres",2,"10 cada perna"],["Panturrilha em pé",3,"12–15"],["Panturrilha sentada",2,"15–20"]]},
+{day:"Terça",focus:"Costas e bíceps",items:[["Puxada frontal",3,"8–12"],["Remada baixa",3,"10–12"],["Remada unilateral",2,"10–12"],["Pulldown",2,"12–15"],["Rosca direta",3,"8–12"],["Rosca martelo",2,"10–12"]]},
+{day:"Quarta",focus:"Posteriores e glúteos",items:[["Terra romeno",3,"8–12"],["Mesa flexora",3,"10–12"],["Cadeira flexora",2,"12–15"],["Elevação pélvica",3,"10–12"],["Abdutora",2,"12–15"],["Panturrilha no leg press",3,"12–20"]]},
+{day:"Quinta",focus:"Superior, braços e abdômen",items:[["Supino máquina",2,"10–12"],["Remada articulada",2,"10–12"],["Elevação lateral",3,"12–15"],["Rosca Scott",2,"10–12"],["Tríceps na polia",2,"10–12"],["Abdominal na polia",3,"12–15"],["Elevação de joelhos",3,"12–15"],["Prancha",2,"30–45 s"]]}
+];
+const fields=["Peso (kg)","Peito (cm)","Cintura (cm)","Abdômen (cm)","Quadril (cm)","Braço direito (cm)","Braço esquerdo (cm)","Coxa direita (cm)","Coxa esquerda (cm)","Panturrilha direita (cm)","Panturrilha esquerda (cm)"];
+let data=JSON.parse(localStorage.getItem("meuTreinoData")||'{"sessions":[],"measures":[]}');
+let selected=0;
+const $=id=>document.getElementById(id);
+function persist(){localStorage.setItem("meuTreinoData",JSON.stringify(data));renderHome();renderHistory();renderMeasures();}
+function show(id){document.querySelectorAll("main section").forEach(s=>s.classList.add("hidden"));$(id).classList.remove("hidden");document.querySelectorAll(".bottom button").forEach(b=>b.classList.toggle("active",b.dataset.page===id));if(id==="workouts")renderWorkout();if(id==="history")renderHistory();if(id==="measures")renderMeasures();window.scrollTo(0,0)}
+function renderTabs(){$("dayTabs").innerHTML=plans.map((p,i)=>`<button class="tab ${i===selected?'active':''}" onclick="selected=${i};renderWorkout()">${p.day.slice(0,3)}</button>`).join("")}
+function renderWorkout(){renderTabs();let p=plans[selected];$("dayTitle").textContent=p.day;$("dayFocus").textContent=p.focus;$("exerciseCount").textContent=p.items.length+" exercícios";$("exerciseList").innerHTML=p.items.map((it,i)=>`<div class="exercise"><div class="row"><div><h3>${it[0]}</h3><small>${it[1]} séries · meta ${it[2]}</small></div></div>${Array.from({length:it[1]},(_,s)=>`<div class="sets"><div><label>Série ${s+1} · kg</label><input inputmode="decimal" id="kg-${i}-${s}" placeholder="Peso"></div><div><label>Repetições</label><input inputmode="numeric" id="rep-${i}-${s}" placeholder="Reps"></div><div><label>Esforço (opcional)</label><input inputmode="numeric" id="rir-${i}-${s}" placeholder="RIR"></div></div>`).join("")}</div>`).join("")}
+function saveWorkout(){let p=plans[selected],exercises=p.items.map((it,i)=>({name:it[0],sets:Array.from({length:it[1]},(_,s)=>({kg:$(`kg-${i}-${s}`).value,reps:$(`rep-${i}-${s}`).value,rir:$(`rir-${i}-${s}`).value})).filter(x=>x.kg||x.reps)})).filter(x=>x.sets.length);if(!exercises.length){alert("Preencha pelo menos uma série antes de salvar.");return}data.sessions.unshift({date:new Date().toISOString().slice(0,10),day:p.day,focus:p.focus,exercises});persist();alert("Treino salvo no histórico!");}
+function clearWorkoutInputs(){renderWorkout()}
+function renderHome(){let days=new Set(data.sessions.filter(s=>s.date>=weekStart()).map(s=>s.day));$("weekCount").textContent=days.size+"/5";$("weekBar").style.width=(days.size/5*100)+"%";let last=[...data.measures].sort((a,b)=>b.date.localeCompare(a.date))[0];$("weightStat").textContent=last&&last.values["Peso (kg)"]?last.values["Peso (kg)"]+" kg":"72 kg";$("latestMeasures").textContent=last?last.date+" · "+Object.entries(last.values).filter(([k,v])=>v).map(([k,v])=>k+": "+v).join(" · "):"Nenhuma medida registrada ainda."}
+function weekStart(){let d=new Date(),day=d.getDay();d.setDate(d.getDate()-((day+6)%7));return d.toISOString().slice(0,10)}
+function renderMeasures(){$("mDate").value ||= new Date().toISOString().slice(0,10);$("measureFields").innerHTML=fields.map((f,i)=>`<div class="field"><label>${f}</label><input id="mf${i}" inputmode="decimal" placeholder="${i===0?'72,0':'—'}"></div>`).join("");$("measureHistory").innerHTML=data.measures.length?[...data.measures].sort((a,b)=>b.date.localeCompare(a.date)).map(m=>`<div class="history-item"><b>${m.date}</b><br>${Object.entries(m.values).filter(([k,v])=>v).map(([k,v])=>k+": "+v).join(" · ")}</div>`).join(""):"Ainda sem registros."}
+function saveMeasures(){let values={};fields.forEach((f,i)=>values[f]=$("mf"+i).value.trim());if(!Object.values(values).some(Boolean)){alert("Preencha pelo menos uma medida.");return}data.measures.push({date:$("mDate").value||new Date().toISOString().slice(0,10),values});persist();renderMeasures();alert("Medidas salvas!")}
+function renderHistory(){$("workoutHistory").innerHTML=data.sessions.length?[...data.sessions].map(s=>`<div class="history-item"><b>${s.date} · ${s.day}</b><br><small>${s.exercises.map(e=>e.name+": "+e.sets.map(x=>(x.kg||"—")+"kg × "+(x.reps||"—")).join(", ")).join(" | ")}</small></div>`).join(""):"Seus treinos salvos aparecerão aqui.";let names=[...new Set(data.sessions.flatMap(s=>s.exercises.map(e=>e.name)))];$("exerciseSelect").innerHTML='<option value="">Escolha um exercício</option>'+names.map(n=>`<option>${n}</option>`).join("");}
+function renderProgress(){let n=$("exerciseSelect").value;if(!n){$("progress").textContent="Sem dados ainda.";return}let rows=data.sessions.flatMap(s=>s.exercises.filter(e=>e.name===n).flatMap(e=>e.sets.map(x=>({date:s.date,kg:Number(x.kg),reps:x.reps})))).filter(x=>x.kg);$("progress").innerHTML=rows.length?rows.map(r=>`<div class="history-item">${r.date}: <b>${r.kg} kg</b> × ${r.reps||"—"} reps</div>`).join(""):"Ainda não há cargas registradas para esse exercício."}
+renderMeasures();renderHome();renderWorkout();renderHistory();
+if("serviceWorker" in navigator && location.protocol.startsWith("http"))navigator.serviceWorker.register("./sw.js").catch(()=>{});
+</script>
+</body></html>
